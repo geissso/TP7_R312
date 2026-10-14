@@ -1,0 +1,28 @@
+---
+import Layout from "../layouts/Layout.astro";
+import GraphicSpecies from "../components/GraphicSpecies.astro";
+---
+
+<Layout title="Toutes les espèces">
+  <div class="all-species flex flex-col gap-10 py-10">
+    <section id="adelie" class="item w-2/3 ml-0">
+      <GraphicSpecies species="Adelie" />
+    </section>
+    <section id="gentoo" class="item w-2/3 ml-16">
+      <GraphicSpecies species="Gentoo" />
+    </section>
+    <section id="chinstrap" class="item w-2/3 ml-32">
+      <GraphicSpecies species="Chinstrap" />
+    </section>
+  </div>
+</Layout>
+
+<style>
+  :global(body:has(.all-species)) {
+    background: #ffffff;
+  }
+
+  .all-species {
+    background: #ffffff;
+  }
+</style>

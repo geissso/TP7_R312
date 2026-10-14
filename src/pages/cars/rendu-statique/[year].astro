@@ -1,0 +1,41 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import PlotFigure from "../../../components/PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+import cars from "../../../assets/cars.json";
+
+// Génère une page par année au moment du build
+export function getStaticPaths() {
+  const years = [...new Set(cars.map((c) => c.year))];
+  return years.map((y) => ({
+    params: { year: y.toString() },
+    props: { filteredCars: cars.filter((c) => c.year === y) },
+  }));
+}
+
+const { year } = Astro.params;
+const { filteredCars } = Astro.props;
+---
+
+<Layout title={`Voitures ${year}`}>
+  <h1 class="text-2xl">Voitures de l'année {year} (rendu statique)</h1>
+  <p>{filteredCars.length} voiture(s) trouvée(s) pour l'année {year}</p>
+  <PlotFigure
+    options={{
+      grid: true,
+      title: `Relation Puissance vs Poids - Voitures ${year}`,
+      x: { label: "Poids (lb)" },
+      y: { label: "Puissance (hp)" },
+      marks: [
+        Plot.dot(filteredCars, {
+          x: "weight (lb)",
+          y: "power (hp)",
+          fill: "steelblue",
+          r: 4,
+          fillOpacity: 0.7,
+        }),
+      ],
+    }}
+  />
+  <a class="text-blue-600 underline" href="/cars/rendu-statique">← Retour</a>
+</Layout>

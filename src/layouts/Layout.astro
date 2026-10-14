@@ -1,18 +1,48 @@
 ---
 import "../styles/global.css";
+import penguins from "../assets/penguins.json";
+
+const species = [...new Set(penguins.map((p) => p.species))].sort();
+
+const { title = "Les graphiques à pingouins" } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+    <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <nav class="site-nav">
+      <a href="/" class="site-logo" aria-label="Accueil">🐧</a>
+      <a href="/AllSpecies" class="nav-link">Toutes les espèces</a>
+      <a href="/tabs" class="nav-link">Onglets</a>
+      <a href="/rendu-dynamique" class="nav-link">Rendu dynamique</a>
+      <a href="/rendu-statique" class="nav-link">Rendu statique</a>
+      <a href="/cars/rendu-dynamique" class="nav-link">Voitures (dyn.)</a>
+      <a href="/cars/rendu-statique" class="nav-link">Voitures (stat.)</a>
+      <a href="/carte/etablissements" class="nav-link">Établissements</a>
+      <a href="/carte/geojson" class="nav-link">Population</a>
+      <select id="species" class="nav-link">
+        {species.map((s) => <option value={s}>{s}</option>)}
+      </select>
+    </nav>
+    <script>
+      const select = document.querySelector<HTMLSelectElement>("#species");
+      const current = location.pathname.split("/").filter(Boolean).pop();
+      if (select && current) select.value = current;
+
+      select?.addEventListener("change", (evt) => {
+        const value = (evt.target as HTMLSelectElement).value;
+        location.pathname = "/species/" + value + "/";
+      });
+    </script>
+    <main class="page-container"><slot /></main>
+    <footer class="site-footer">TP7</footer>
   </body>
 </html>
 

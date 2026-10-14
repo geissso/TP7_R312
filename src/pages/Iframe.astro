@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Graphique par iframe">
+  <h1>Graphique par iframe</h1>
+  <select id="species-iframe">
+    <option value="Adelie">Adelie</option>
+    <option value="Chinstrap">Chinstrap</option>
+    <option value="Gentoo">Gentoo</option>
+  </select>
+  <iframe
+    id="frame"
+    src="/species/Adelie/"
+    title="Graphique des manchots"
+    width="100%"
+    height="500"></iframe>
+  <script>
+    document
+      .querySelector("#species-iframe")
+      ?.addEventListener("change", (evt) => {
+        const value = (evt.target as HTMLSelectElement).value;
+        const frame = document.querySelector<HTMLIFrameElement>("#frame");
+        if (frame) frame.src = `/species/${value}/`;
+      });
+  </script>
+</Layout>

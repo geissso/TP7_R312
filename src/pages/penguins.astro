@@ -1,0 +1,43 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <nav>
+    <a href="/">Simple</a> | <a href="/penguins">Simple Penguin</a>
+  </nav>
+  <h1 class="text-2xl">Test Astro et Plot (Observablehq) - Penguins</h1>
+
+  <input type="number" id="nbr-1" value="10" /> fois
+  <input type="number" id="nbr-2" value="2" />
+  <span id="resultat">resultat</span>
+  <script>
+    const nbr1: HTMLInputElement = document.querySelector("#nbr-1")!;
+    const nbr2: HTMLInputElement = document.querySelector("#nbr-2")!;
+    const resultat: HTMLSpanElement = document.querySelector("#resultat")!;
+    function calcul() {
+      const val1 = parseInt(nbr1.value);
+      const val2 = parseInt(nbr2.value);
+      resultat.innerText = (val1 * val2).toString();
+    }
+    nbr1.addEventListener("change", calcul);
+    nbr2.addEventListener("change", calcul);
+    calcul();
+  </script>
+  <div id="myplot"></div>
+  <script>
+    import * as Plot from "@observablehq/plot";
+    import penguins from "../assets/penguins.json";
+
+    const plot = Plot.plot({
+      marks: [
+        Plot.dot(penguins, {
+          x: "culmen_length_mm",
+          y: "culmen_depth_mm",
+          stroke: "species",
+        }),
+      ],
+    });
+    document.querySelector("#myplot")!.append(plot);
+  </script>
+</Layout>

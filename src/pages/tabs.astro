@@ -1,0 +1,67 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PlotFigure from "../components/PlotFigure.astro";
+import {
+  Tabs,
+  TabsList,
+  TabsTab,
+  TabsPanel,
+} from "accessible-astro-components";
+import * as Plot from "@observablehq/plot";
+import penguins from "../assets/penguins.json";
+import { penguinIcon, speciesColors } from "../utils/penguins.js";
+
+// Liste des espèces déterminée automatiquement
+const species = [...new Set(penguins.map((p) => p.species))].sort();
+---
+
+<Layout title="Graphique par onglets">
+  <h1>Graphique par onglets</h1>
+  <Tabs>
+    <TabsList class="flex! gap-2!">
+      {
+        species.map((s, i) => (
+          <TabsTab
+            id={`tab-${s}`}
+            controls={`panel-${s}`}
+            selected={i === 0}
+            class="px-4! py-2! border-2! rounded-t! aria-selected:bg-blue-600! aria-selected:text-white!"
+          >
+            {s}
+          </TabsTab>
+        ))
+      }
+    </TabsList>
+    {
+      species.map((s, i) => {
+        const filtered = penguins.filter((p) => p.species === s);
+        const icon = penguinIcon(
+          speciesColors[s as keyof typeof speciesColors],
+        );
+        return (
+          <TabsPanel
+            id={`panel-${s}`}
+            labelledby={`tab-${s}`}
+            selected={i === 0}
+            class="p-4! border-2!"
+          >
+            <h2>Manchots {s}</h2>
+            <PlotFigure
+              options={{
+                marks: [
+                  Plot.image(filtered, {
+                    x: "culmen_length_mm",
+                    y: "culmen_depth_mm",
+                    src: () => icon,
+                    width: 20,
+                    height: 20,
+                  }),
+                ],
+              }}
+            />
+          </TabsPanel>
+        );
+      })
+    }
+  </Tabs>
+</Layout>

@@ -1,0 +1,48 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PlotFigure from "../components/PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+import penguins from "../assets/penguins.json";
+import { penguinIcon, speciesColors } from "../utils/penguins.js";
+
+const species = ["Adelie", "Chinstrap", "Gentoo"];
+---
+
+<Layout title="Graphique par ancre">
+  <h1>Graphique par ancre</h1>
+  <select id="species-anchor">
+    {species.map((s) => <option value={s}>{s}</option>)}
+  </select>
+  {
+    species.map((s) => {
+      const filtered = penguins.filter((p) => p.species === s);
+      const icon = penguinIcon(speciesColors[s]);
+      return (
+        <section id={s}>
+          <h2>Manchots {s}</h2>
+          <PlotFigure
+            options={{
+              marks: [
+                Plot.image(filtered, {
+                  x: "culmen_length_mm",
+                  y: "culmen_depth_mm",
+                  src: () => icon,
+                  width: 20,
+                  height: 20,
+                }),
+              ],
+            }}
+          />
+        </section>
+      );
+    })
+  }
+  <script>
+    document
+      .querySelector("#species-anchor")
+      ?.addEventListener("change", (evt) => {
+        const value = (evt.target as HTMLSelectElement).value;
+        location.hash = value;
+      });
+  </script>
+</Layout>

@@ -6,7 +6,37 @@ import penguins from "../assets/penguins.json";
 ---
 
 <Layout>
-  <h1 class="text-2xl">Test Astro et Plot (Observablehq)</h1>
+  <nav>
+    <a href="/">Simple</a> | <a href="/penguins">Simple Penguin</a>
+  </nav>
+  <h1 class="text-2xl">TP 4 - R312</h1>
+
+  <input type="number" id="nbr-1" value="10" /> fois
+  <input type="number" id="nbr-2" value="2" />
+  <span id="resultat">resultat</span>
+  <script>
+    const nbr1: HTMLInputElement = document.querySelector("#nbr-1")!;
+    const nbr2: HTMLInputElement = document.querySelector("#nbr-2")!;
+    const resultat: HTMLSpanElement = document.querySelector("#resultat")!;
+    function calcul() {
+      const val1 = parseInt(nbr1.value);
+      const val2 = parseInt(nbr2.value);
+      resultat.innerText = (val1 * val2).toString();
+    }
+    nbr1.addEventListener("change", calcul);
+    nbr2.addEventListener("change", calcul);
+    calcul();
+  </script>
+  <div id="myplot"></div>
+  <script>
+    import * as Plot from "@observablehq/plot";
+
+    const plot = Plot.rectY(
+      { length: 10000 },
+      Plot.binX({ y: "count" }, { x: Math.random }),
+    ).plot();
+    document.querySelector("#myplot")!.append(plot);
+  </script>
   <PlotFigure
     options={{
       marks: [

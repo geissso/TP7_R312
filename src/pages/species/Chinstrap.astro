@@ -1,0 +1,29 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PlotFigure from "../../components/PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+import penguins from "../../assets/penguins.json";
+import { penguinIcon, speciesColors } from "../../utils/penguins.js";
+
+const penguinsChinstrap = penguins.filter(
+  ({ species }) => species === "Chinstrap",
+);
+const icon = penguinIcon(speciesColors.Chinstrap);
+---
+
+<Layout title="Chinstrap">
+  <h1>Manchots Chinstrap</h1>
+  <PlotFigure
+    options={{
+      marks: [
+        Plot.image(penguinsChinstrap, {
+          x: "culmen_length_mm",
+          y: "culmen_depth_mm",
+          src: () => icon,
+          width: 20,
+          height: 20,
+        }),
+      ],
+    }}
+  />
+</Layout>
